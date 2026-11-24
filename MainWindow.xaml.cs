@@ -3,9 +3,6 @@ using System.Windows;
 
 namespace ProjektReklamelyd
 {
-    /// <summary>
-    /// Startvinduet. Herfra åbnes programmets funktioner.
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()

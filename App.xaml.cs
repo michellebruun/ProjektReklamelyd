@@ -3,9 +3,7 @@ using System.Windows.Threading;
 
 namespace ProjektReklamelyd
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+
     public partial class App : Application
     {
         // Hvis der sker en fejl, som vi ikke har fanget, viser vi den i stedet for at programmet lukker
