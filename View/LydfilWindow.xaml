@@ -1,0 +1,138 @@
+<Window x:Class="ProjektReklamelyd.View.LydfilWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Administration og kategorisering af lydfiler" Height="680" Width="1150"
+        WindowStartupLocation="CenterScreen" FontSize="14" Closed="Window_Closed">
+
+    <!-- Fælles udseende for alle knapper i vinduet -->
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="Margin" Value="0,0,6,6"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===== VENSTRE SIDE: listen med alle lydfiler ===== -->
+        <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,0,12,0">
+            <TextBlock DockPanel.Dock="Top" Text="Lydfiler" FontSize="22" FontWeight="Bold" Margin="0,0,0,8"/>
+
+            <!-- Søgefelt og knap til en ny lydfil -->
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                <TextBlock Text="Søg:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <Button DockPanel.Dock="Right" Content="+ Ny lydfil" Click="KnapNy_Click" Margin="8,0,0,0"/>
+                <TextBox x:Name="txtSoeg" TextChanged="TxtSoeg_TextChanged" Padding="4"
+                         ToolTip="Søg i titel, type, genre og emner"/>
+            </DockPanel>
+
+            <TextBlock x:Name="txtAntal" DockPanel.Dock="Bottom" Margin="0,6,0,0" Foreground="Gray"/>
+
+            <DataGrid x:Name="dataGridLydfiler" AutoGenerateColumns="False" IsReadOnly="True"
+                      SelectionMode="Single" HeadersVisibility="Column" CanUserAddRows="False"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray"
+                      SelectionChanged="DataGridLydfiler_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Titel" Binding="{Binding Titel}" Width="2*"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*"/>
+                    <DataGridTextColumn Header="Genre / emner" Binding="{Binding Kategori}" Width="2*"/>
+                    <DataGridTextColumn Header="Format" Binding="{Binding Format}" Width="Auto"/>
+                    <DataGridTextColumn Header="Varighed" Binding="{Binding VarighedTekst}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <!-- ===== HØJRE SIDE: formular til at oprette og redigere en lydfil ===== -->
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="6" Padding="14">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock x:Name="txtOverskrift" Text="Ny lydfil" FontSize="22" FontWeight="Bold" Margin="0,0,0,12"/>
+
+                    <!-- 1. Vælg filen på computeren -->
+                    <TextBlock Text="Lydfil på computeren"/>
+                    <DockPanel Margin="0,2,0,10">
+                        <Button DockPanel.Dock="Right" Content="Vælg fil..." Click="KnapVaelgFil_Click" Margin="6,0,0,0"/>
+                        <TextBox x:Name="txtFilsti" IsReadOnly="True" Background="WhiteSmoke" Padding="4"/>
+                    </DockPanel>
+
+                    <!-- Format og varighed bliver udfyldt automatisk, når filen er valgt -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Format"/>
+                            <TextBox x:Name="txtFormat" IsReadOnly="True" Background="WhiteSmoke" Padding="4" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Varighed (sekunder)"/>
+                            <TextBox x:Name="txtVarighed" Padding="4" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 2. Titel og type -->
+                    <TextBlock Text="Titel"/>
+                    <TextBox x:Name="txtTitel" Padding="4" Margin="0,2,0,10"/>
+
+                    <TextBlock Text="Type"/>
+                    <ComboBox x:Name="comboType" SelectionChanged="ComboType_SelectionChanged" Padding="6,4" Margin="0,2,0,10"/>
+
+                    <!-- 3. Kategorisering: kun det felt, der passer til typen, bliver vist -->
+
+                    <!-- Musik: præcis én genre -->
+                    <StackPanel x:Name="panelGenre" Visibility="Collapsed">
+                        <TextBlock Text="Musikgenre"/>
+                        <ComboBox x:Name="comboGenre" DisplayMemberPath="Navn" Padding="6,4" Margin="0,2,0,6"/>
+                        <DockPanel Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" Content="Tilføj genre" Click="KnapTilfoejGenre_Click" Margin="6,0,0,0"/>
+                            <TextBox x:Name="txtNyGenre" Padding="4" ToolTip="Mangler genren? Skriv den her og klik på Tilføj genre"/>
+                        </DockPanel>
+                    </StackPanel>
+
+                    <!-- Reklame og Taleindslag: et eller flere emner -->
+                    <StackPanel x:Name="panelEmner" Visibility="Collapsed">
+                        <TextBlock Text="Emner (sæt flueben ved et eller flere)"/>
+                        <ListBox x:Name="listEmner" SelectionMode="Multiple" Height="150" Margin="0,2,0,6">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Fluebenet hænger sammen med, om emnet er valgt i listen -->
+                                    <CheckBox Content="{Binding Navn}"
+                                              IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <DockPanel Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" Content="Tilføj emne" Click="KnapTilfoejEmne_Click" Margin="6,0,0,0"/>
+                            <TextBox x:Name="txtNytEmne" Padding="4" ToolTip="Mangler emnet? Skriv det her og klik på Tilføj emne"/>
+                        </DockPanel>
+                    </StackPanel>
+
+                    <!-- Jingle: ingen kategori -->
+                    <TextBlock x:Name="txtJingleInfo" Text="Jingler har hverken genre eller emner."
+                               Foreground="Gray" Visibility="Collapsed" Margin="0,0,0,10"/>
+
+                    <!-- 4. Knapper -->
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Content="Gem" Click="KnapGem_Click" FontWeight="Bold" MinWidth="80"/>
+                        <Button x:Name="knapSlet" Content="Slet" Click="KnapSlet_Click" MinWidth="80" IsEnabled="False"/>
+                        <Button Content="▶ Afspil" Click="KnapAfspil_Click"/>
+                        <Button Content="■ Stop" Click="KnapStop_Click"/>
+                    </WrapPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Statuslinje nederst i vinduet -->
+        <TextBlock x:Name="txtStatus" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0" Foreground="DarkGreen"/>
+    </Grid>
+</Window>

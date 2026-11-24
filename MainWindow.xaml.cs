@@ -1,24 +1,24 @@
-﻿using System.Text;
+﻿using ProjektReklamelyd.View;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ProjektReklamelyd
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Startvinduet. Herfra åbnes programmets funktioner.
     /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        // Funktion 1: Administration og kategorisering af lydfiler
+        private void KnapLydfiler_Click(object sender, RoutedEventArgs e)
+        {
+            LydfilWindow lydfilWindow = new LydfilWindow();
+            lydfilWindow.Owner = this;
+            lydfilWindow.ShowDialog();
         }
     }
 }
