@@ -8,14 +8,11 @@
         Title="Agerbæk Reklamelyd" Height="360" Width="560"
         WindowStartupLocation="CenterScreen" FontSize="14">
     <StackPanel Margin="30">
-        <TextBlock Text="Agerbæk Reklamelyd" FontSize="28" FontWeight="Bold"/>
-        <TextBlock Text="Prototype på et radioprogram med musik, reklamer, taleindslag og jingler"
-                   Foreground="Gray" TextWrapping="Wrap" Margin="0,4,0,24"/>
+<TextBlock Text="Agerbæk Reklamelyd" FontSize="28" FontWeight="Bold" Margin="0,0,0,24"/>
 
-        <!-- Funktion 1 -->
+        <!-- Funktion 1 try not to touch okay? -->
         <Button Content="Administration og kategorisering af lydfiler" Click="KnapLydfiler_Click"
                 Padding="14,8" HorizontalAlignment="Left"/>
 
-        <!-- Her kan gruppen tilføje knapper til de andre funktioner (fx playlister og afspilning) -->
     </StackPanel>
 </Window>
